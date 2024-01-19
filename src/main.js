@@ -9,6 +9,8 @@ const BASE_URL = "https://pixabay.com/api/?";
 const API_KEY = "41837495-d070c30be5c0243a4bb3b397a";
 const form = document.querySelector('.search-form');
 const galleryBox = document.querySelector('.gallery');
+const loader = document.querySelector('.loader-container');
+
 
 let gallery = new SimpleLightbox('.gallery a', { 
     captionsData: 'alt',
@@ -18,12 +20,13 @@ let gallery = new SimpleLightbox('.gallery a', {
 form.addEventListener("submit", event => {
     event.preventDefault();
 
-    galleryBox.innerHTML =
-        `<li>
-        <span class="loader"></span>
-    </li>`
+    loaderToShow();
 
-    const value = event.target.elements.keywords.value;
+    galleryBox.innerHTML = '';
+    gallery.refresh();
+
+    // const value = event.target.elements.keywords.value;
+    const value = form.elements['keywords'].value;
 
     const searchParams = new URLSearchParams({
         key: API_KEY,
@@ -33,18 +36,24 @@ form.addEventListener("submit", event => {
         safesearch: true,
     });
 
+
     fetch(`${BASE_URL}${searchParams}`)
         .then(response => {
+
             if (!response.ok)
                 throw new Error(response.status);
             return response.json();
         })
         .then(addImages)
         .catch(showError)
+        .finally(loaderToHide())
 });
 
 const addImages = images => {
-    if (images.hits.length === 0) throw new Error(images.status);
+    if (images.hits.length === 0) {
+        showError("No images found for the given search query.");
+        return;
+    };
     galleryBox.innerHTML = images.hits.reduce((html, { largeImageURL, webformatURL, tags, likes, views, comments, downloads }) => html + `
     <li class="img">
        <a href="${largeImageURL}"><img src="${webformatURL}" alt="${tags}"></a>
@@ -59,9 +68,9 @@ const addImages = images => {
     gallery.refresh();
 }
 
-const showError = () => {
+const showError = (message = "An error occurred.") => {
     iziToast.show({
-        message: `Sorry, there are no images matching your search query. Please try again!`,
+        message: message,
         maxWidth: 432,
         iconUrl: './img/error-icon.svg',
         iconColor: '#FFFFFF',
@@ -69,5 +78,12 @@ const showError = () => {
         messageColor: '#FFFFFF',
         position: 'topRight'
     });
-    imagesContainer.innerHTML = '';
+    galleryBox.innerHTML = '';
+}
+
+const loaderToShow = () => {
+  loader.style.display = 'block';
+}
+const loaderToHide = () => {
+  loader.style.display = 'none';
 }

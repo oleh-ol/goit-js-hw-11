@@ -24,10 +24,12 @@ button {
   border-radius: 8px;
   line-height: 1.5;
 }
+
 button:hover,
 button:focus {
   cursor: pointer;
-  background-color: #6C8CFF;;
+  background-color: #6C8CFF;
+  ;
 }
 
 input {
@@ -35,7 +37,7 @@ input {
   padding: 8px 16px;
   font-weight: 400;
   font-size: 16px;
-  line-height: 1,5;
+  line-height: 1, 5;
   border: 1px solid #808080;
   border-radius: 8px;
   width: 272px;
@@ -44,7 +46,7 @@ input {
 .search-form {
   display: flex;
   justify-content: center;
-  
+
   gap: 8px;
   padding-top: 36px;
 }
@@ -92,15 +94,20 @@ span {
   font-weight: 500;
 }
 
+.loader-container {
+  text-align: center;
+  display: none;
+  border-right: 4px solid transparent;
+  box-sizing: border-box;
+}
+
 .loader {
   width: 48px;
   height: 48px;
-  margin-right: auto;
-  margin-left: auto;
-  border: 5px solid #000000;
-  border-bottom-color: transparent;
+  border: 5px solid #FFF;
+  border-bottom-color: #FF3D00;
   border-radius: 50%;
-  display: block;
+  display: inline-block;
   box-sizing: border-box;
   animation: rotation 1s linear infinite;
 }
